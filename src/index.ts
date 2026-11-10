@@ -36,8 +36,14 @@ export default {
   async email(message: EmailMessage, env: Bindings, ctx: ExecutionContext) {
     console.log(`Received email from: ${message.from} to: ${message.to}`)
 
-try {
-          await initDatabase(env.DB)
-          await handleEmail(message, env)
-          await message.forward("15361167162@163.com");
-        } catch (error) {
+    try {
+      await initDatabase(env.DB)
+      await handleEmail(message, env)
+      // 加上这一句，转发到你的163邮箱
+      await message.forward("15361167162@163.com");
+    } catch (error) {
+      console.error('Failed to handle email:', error)
+      message.setReject('Internal error')
+    }
+  },
+}
